@@ -1,66 +1,39 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# BINGO !!
+Bingo is a game of chance played using cards with numbers printed on them, which are marked off of the card as the
+caller reads out some manner of random numbers. Play usually ceases once a certain pattern is achieved on a card,
+where the winner will shout out "Bingo!" in order to let the caller and the room know that there may be a winner.
+There are lots of different variations of Bingo, each with their own specific rules. Classic US Bingo is perhaps the most
+well known, where the game is played using a 5x5 grid of numbers between 1 and 75, with a FREE space in the
+middle. There is also a UK version of Bingo, which uses a 9x3 grid of spaces containing numbers between 1 and 90, of
+which five spaces on each row are filled in
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Entities
+In order to create the bingo game, we first differentiated the different entities of the game
+1. Cards with numbers from 1 to 75 without repetitions.
+2. Players, who own a card
+3. Bingo, having the rules of the game
 
-## About Laravel
+##Player
+The Player Class has a primer that is automatically generated when the player is created.
+This player belongs to a BINGO game.
+And by default his BINGO status is false
+##Card
+The chart has a constructor bounded by its 'x' and 'y' dimensions, which are 5x5.
+At the beginning of the creation of the chart it is filled with zeros, and then the corresponding numbers are entered in the function 'generateCard', with random numbers according to the interval that corresponds to it:
+> $this->card_interval = [ [1,15],[16,30],[31,45],[46,60],[61,75] ];
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Bingo
+The BINGO class has the list of players, so that it can be updated and new players can be added.
+It also has the 'callNumber' function, which calls a random number from the list that has not been called before. And then it updates the list of cards for each player.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# URLS
+    
+    Route::get('player/getCard/{id}', 'App\Http\Controllers\BingoController\CardController@getCard')->name('getCard');
+    Route::get('player/create/{id}', 'App\Http\Controllers\BingoController\CardController@createPlayer')->name('createPlayer');
+    Route::get('player/all/', 'App\Http\Controllers\BingoController\CardController@getAllPlayers')->name('getAllPlayers');
+    Route::get('player/removeAll/', 'App\Http\Controllers\BingoController\CardController@removeAllPlayers')->name('removeAllPlayers');
+    Route::get('bingo/number', 'App\Http\Controllers\BingoController\CardController@callNumber')->name('callNumber');
+	
+# Arquitecture
+The CARD controller calls and creates the different entities, and these store the information in the browser sessions.
+It could also be stored in a database.
